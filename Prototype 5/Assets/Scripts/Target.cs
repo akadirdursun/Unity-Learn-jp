@@ -8,34 +8,44 @@ public class Target : MonoBehaviour
     [SerializeField] private ParticleSystem explosionParticle;
 
     private Rigidbody targetRB;
-    private GameManager gameManager;
 
-    private float xSpawnRange = 4f;
-    private float ySpawnPos = -2f;
     private float minForce = 10f;
     private float maxForce = 15f;
     private float torqueValue = 10f;
 
+    private bool isGameActive = true;
 
     private void Awake()
     {
         targetRB = GetComponent<Rigidbody>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     private void Start()
     {
-        transform.position = RandomSpawnPosition();
-
         targetRB.AddForce(RandomForce(), ForceMode.Impulse);
         targetRB.AddTorque(RandomTarque(), RandomTarque(), RandomTarque(), ForceMode.Impulse);
     }
 
+    private void OnEnable()
+    {
+        StaticEvents.GameOver += IsGameOver;
+    }
+
+    private void OnDisable()
+    {
+        StaticEvents.GameOver -= IsGameOver;
+    }
+
+    private void IsGameOver()
+    {
+        isGameActive = false;
+    }
+
     private void OnMouseDown()
     {
-        if (gameManager.IsGameActive)
+        if (isGameActive)
         {
-            gameManager.UpdateScore(pointValue);
+            StaticEvents.AddScore?.Invoke(pointValue);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             Destroy(gameObject);
         }           
@@ -43,15 +53,7 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!gameObject.CompareTag("BadTarget"))
-            gameManager.GameOver();
-
         Destroy(gameObject);
-    }
-
-    private Vector3 RandomSpawnPosition()
-    {
-        return new Vector3(Random.Range(-xSpawnRange, xSpawnRange), ySpawnPos);
     }
 
     private Vector3 RandomForce()

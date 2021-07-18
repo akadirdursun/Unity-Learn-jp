@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - BadTarget
+  - Sensor
+  - Bad
   layers:
   - Default
   - TransparentFX
