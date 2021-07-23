@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
         gameOverScreen.SetActive(true);
     }
 
-    private void CloseTitleScreen(float f)
+    private void CloseTitleScreen(DifficultySettings settings)
     {
         titleScreen.SetActive(false);
     }

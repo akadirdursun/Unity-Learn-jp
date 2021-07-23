@@ -5,10 +5,12 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private List<GameObject> targets;
-    [SerializeField] private float spawnTime = 0.5f;
+    [SerializeField] private float spawnTime = 1.5f;
 
     private float xSpawnRange = 4f;
-    private float ySpawnPos = -2f;    
+    private float ySpawnPos = -2f;
+
+    private Coroutine spawnCoroutine;
 
     private void OnEnable()
     {
@@ -22,15 +24,14 @@ public class SpawnManager : MonoBehaviour
         StaticEvents.GameOver -= StopSpawning;
     }
 
-    private void StartToSpawn(float difficulty)
-    {        
-        spawnTime *= difficulty;
-        StartCoroutine(SpawnTarget());
+    private void StartToSpawn(DifficultySettings settings)
+    {
+        spawnTime = settings.SpawnTime;        
+        spawnCoroutine = StartCoroutine(SpawnTarget());
     }
 
     IEnumerator SpawnTarget()
     {
-        Debug.Log("Spawn Time " + spawnTime);
         while (true)
         {
             yield return new WaitForSeconds(spawnTime);
@@ -45,8 +46,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     private void StopSpawning()
-    {
-        //isGameActive = false;
-        StopCoroutine(SpawnTarget());
+    {                
+        StopCoroutine(spawnCoroutine);
     }
 }
