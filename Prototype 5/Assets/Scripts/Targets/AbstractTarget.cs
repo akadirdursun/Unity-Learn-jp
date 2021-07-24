@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Target : MonoBehaviour
+public abstract class AbstractTarget : MonoBehaviour
 {
-    [SerializeField] private int pointValue;
-    [SerializeField] private ParticleSystem explosionParticle;
+    [SerializeField] protected int pointValue;
+    [SerializeField] protected ParticleSystem explosionParticle;
+    [SerializeField] protected PlayerData playerData;
 
-    private Rigidbody targetRB;
+    protected Rigidbody targetRB;
 
-    private float minForce = 10f;
-    private float maxForce = 15f;
-    private float torqueValue = 10f;
+    protected float minForce = 10f;
+    protected float maxForce = 15f;
+    protected float torqueValue = 10f;
 
-    private bool isGameActive = true;
+    protected bool isGameActive = true;
 
     private void Awake()
     {
@@ -45,10 +46,11 @@ public class Target : MonoBehaviour
     {
         if (isGameActive)
         {
-            StaticEvents.AddScore?.Invoke(pointValue);
+            playerData.AddScore(pointValue);
+            TargetActions();
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             Destroy(gameObject);
-        }           
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,5 +66,9 @@ public class Target : MonoBehaviour
     private float RandomTarque()
     {
         return Random.Range(-torqueValue, torqueValue);
+    }
+
+    protected virtual void TargetActions()
+    {
     }
 }

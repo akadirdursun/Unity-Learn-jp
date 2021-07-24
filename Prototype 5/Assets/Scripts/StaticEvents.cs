@@ -7,6 +7,6 @@ public static class StaticEvents
     public delegate void VoidDelegate();    
     public static VoidDelegate GameOver;    
 
-    public static Action<int> AddScore;
-    public static Action<DifficultySettings> StartTheGame;
+    public static Action<DifficultySettingsData> StartTheGame;
+    public static Action<bool> Hungry;
 }

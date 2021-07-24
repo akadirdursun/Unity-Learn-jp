@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DifficultyButtons : MonoBehaviour
 {
-    [SerializeField] private DifficultySettings difficulty;
+    [SerializeField] private DifficultySettingsData difficulty;
 
     private Button difficultyButton; 
 

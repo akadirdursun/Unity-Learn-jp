@@ -5,30 +5,27 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private PlayerData playerData;
+    [Header("UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject titleScreen;
 
-    private int score;
+    private void Awake()
+    {
+        playerData.UiManager = this;
+    }
 
     private void OnEnable()
     {
-        StaticEvents.AddScore += UpdateScore;
         StaticEvents.StartTheGame += CloseTitleScreen;
         StaticEvents.GameOver += OpenGameOverUI;
     }
 
     private void OnDisable()
     {
-        StaticEvents.AddScore -= UpdateScore;
         StaticEvents.StartTheGame -= CloseTitleScreen;
         StaticEvents.GameOver -= OpenGameOverUI;
-    }
-
-    private void UpdateScore(int scoreToAdd)
-    {
-        score += scoreToAdd;
-        scoreText.text = "Score: " + score;
     }
 
     private void OpenGameOverUI()
@@ -36,8 +33,13 @@ public class UIManager : MonoBehaviour
         gameOverScreen.SetActive(true);
     }
 
-    private void CloseTitleScreen(DifficultySettings settings)
+    private void CloseTitleScreen(DifficultySettingsData settings)
     {
         titleScreen.SetActive(false);
+    }
+
+    public void UpdateScoreUI()
+    {
+        scoreText.text = playerData.Score.ToString();
     }
 }

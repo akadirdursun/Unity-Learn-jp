@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
         StaticEvents.GameOver -= StopSpawning;
     }
 
-    private void StartToSpawn(DifficultySettings settings)
+    private void StartToSpawn(DifficultySettingsData settings)
     {
         spawnTime = settings.SpawnTime;        
         spawnCoroutine = StartCoroutine(SpawnTarget());

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6920409459659425545}
   - component: {fileID: 6920409459661725542}
   - component: {fileID: 6920409459661725543}
-  - component: {fileID: 6920409459661725541}
   m_Layer: 6
   m_Name: EnergyCan
   m_TagString: Untagged
@@ -113,17 +112,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.22468363, y: 0.5323664, z: 0.23313323}
   m_Center: {x: -0.0017965958, y: 0.00538975, z: -0}
---- !u!114 &6920409459661725541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6920409459661625801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 104db25c134e04b47829e981a1ef228a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointValue: 100
-  explosionParticle: {fileID: 15085447402717889, guid: 743ce290c74ae49c19aa3f128322fc7e, type: 3}
