@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e17ab73e6aebce4ea9cdc89dae51341, type: 3}
   m_Name: Hard
   m_EditorClassIdentifier: 
-  spawnTime: 0.5
-  hungryPerSec: 20
-  damageTakenPerSec: 7
+  spawnPerSec: 3
+  hungryPerSec: 15
+  damageTakenPerSec: 6
+  secToLevelUpDifficulty: 45

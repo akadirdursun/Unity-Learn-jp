@@ -1,45 +1,110 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System.Collections;
 
-public class UIManager : MonoBehaviour
+namespace ClickyMause
 {
-    [SerializeField] private PlayerData playerData;
-    [Header("UI")]
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private GameObject gameOverScreen;
-    [SerializeField] private GameObject titleScreen;
-
-    private void Awake()
+    public class UIManager : MonoBehaviour
     {
-        playerData.UiManager = this;
-    }
+        [SerializeField] private PlayerData playerData;
+        [Header("UI")]
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private GameObject gameOverScreen;
+        [SerializeField] private GameObject titleScreen;
+        [SerializeField] private GameObject hud;
+        [SerializeField] private GameObject TargetInfoButton;
+        [Header("Pause UI")]
+        [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private TextMeshProUGUI pauseTest;
+        [SerializeField] private GameObject restartButton;
+        [Header("Health UI")]
+        [SerializeField] private GameObject healthUIParent;
+        [SerializeField] private TextMeshProUGUI healthValueText;
+        [SerializeField] private Slider healthSlider;
 
-    private void OnEnable()
-    {
-        StaticEvents.StartTheGame += CloseTitleScreen;
-        StaticEvents.GameOver += OpenGameOverUI;
-    }
+        private bool isHungry;
+        private bool isPaused;
 
-    private void OnDisable()
-    {
-        StaticEvents.StartTheGame -= CloseTitleScreen;
-        StaticEvents.GameOver -= OpenGameOverUI;
-    }
+        private void Awake()
+        {
+            playerData.UiManager = this;
+        }
 
-    private void OpenGameOverUI()
-    {
-        gameOverScreen.SetActive(true);
-    }
+        private void OnEnable()
+        {
+            StaticEvents.StartTheGame += CloseTitleScreen;
+            StaticEvents.GameOver += OpenGameOverUI;
+            StaticEvents.Hungry += ShowHealthUI;
+            StaticEvents.PauseResumeGame += OpenClosePauseMenu;
+        }
 
-    private void CloseTitleScreen(DifficultySettingsData settings)
-    {
-        titleScreen.SetActive(false);
-    }
+        private void OnDisable()
+        {
+            StaticEvents.StartTheGame -= CloseTitleScreen;
+            StaticEvents.GameOver -= OpenGameOverUI;
+            StaticEvents.Hungry -= ShowHealthUI;
+            StaticEvents.PauseResumeGame -= OpenClosePauseMenu;
+        }
 
-    public void UpdateScoreUI()
-    {
-        scoreText.text = playerData.Score.ToString();
+        private void OpenGameOverUI()
+        {
+            gameOverScreen.SetActive(true);
+        }
+
+        private void CloseTitleScreen(DifficultySettingsData settings)
+        {
+            titleScreen.SetActive(false);
+            TargetInfoButton.SetActive(false);
+            hud.SetActive(true);
+        }
+
+        private void ShowHealthUI(bool value)
+        {
+            isHungry = value;
+            healthUIParent.SetActive(value);
+        }
+
+        public void UpdateScoreUI()
+        {
+            scoreText.text = playerData.Score.ToString();
+        }
+
+        public void UpdateHealthUI()
+        {
+            if (!healthUIParent.activeInHierarchy)
+                StartCoroutine(ShowHealthUICoroutine());
+
+            healthValueText.text = playerData.CurrentHealth + " / " + playerData.MaxHealth;
+            healthSlider.maxValue = playerData.MaxHealth;
+            healthSlider.value = playerData.CurrentHealth;
+        }
+
+        public void OpenClosePauseMenu()
+        {
+            if (isPaused)
+            {
+                pauseTest.text = "Pause";
+                pauseMenu.SetActive(false);
+                restartButton.SetActive(false);
+                isPaused = false;
+            }
+            else
+            {
+                pauseTest.text = "Resume";
+                pauseMenu.SetActive(true);
+                restartButton.SetActive(true);
+                isPaused = true;
+            }
+
+        }
+
+        IEnumerator ShowHealthUICoroutine()
+        {
+            healthUIParent.SetActive(true);
+            yield return new WaitForSeconds(1f);
+            if (!isHungry)
+                healthUIParent.SetActive(false);
+        }
     }
 }

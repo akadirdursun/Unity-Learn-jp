@@ -2,11 +2,17 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public static class StaticEvents
+namespace ClickyMause
 {
-    public delegate void VoidDelegate();    
-    public static VoidDelegate GameOver;    
+    public static class StaticEvents
+    {
+        public delegate void VoidDelegate();
+        public static VoidDelegate GameOver;
+        public static VoidDelegate LevelUpDifficulty;
+        public static VoidDelegate PauseResumeGame;
 
-    public static Action<DifficultySettingsData> StartTheGame;
-    public static Action<bool> Hungry;
+        public static Action<DifficultySettingsData> StartTheGame;
+        public static Action<bool> Hungry;
+        public static Action<float> HungerBoost;
+    }
 }

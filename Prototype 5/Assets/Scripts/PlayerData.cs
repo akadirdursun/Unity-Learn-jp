@@ -1,77 +1,102 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerData", menuName = "Player Data")]
-public class PlayerData : ScriptableObject
+namespace ClickyMause
 {
-    [SerializeField] private int score;
-    [Header("Health")]
-    [SerializeField] private int maxHealth;
-    [SerializeField] private int currentHealth;
-    [Header("Hunger")]
-    [SerializeField] private int maxHunger;
-    [SerializeField] private int currentHunger;
-
-    private float healPoints = 0;
-
-    private UIManager uiManager;
-
-    #region Properties
-    public int MaxHealth { get => maxHealth; }
-    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
-    public int MaxHunger { get => maxHunger; }
-    public int CurrentHunger { get => currentHunger; set => currentHunger = value; }
-    public int Score { get => score; }
-    public UIManager UiManager { set => uiManager = value; }
-    #endregion
-
-    private void OnEnable()
+    [CreateAssetMenu(fileName = "PlayerData", menuName = "Player Data")]
+    public class PlayerData : ScriptableObject
     {
-        StaticEvents.StartTheGame += ResetPlayerData;
-    }
+        [SerializeField] private int score;
+        [Header("Health")]
+        [SerializeField] private int maxHealth;
+        [SerializeField] private int currentHealth;
+        [Header("Hunger")]
+        [SerializeField] private int maxHunger;
+        [SerializeField] private int currentHunger;
 
-    private void OnDisable()
-    {
-        StaticEvents.StartTheGame -= ResetPlayerData;
-    }
+        private float healPoints = 0;
 
-    private void ResetPlayerData(DifficultySettingsData d)
-    {
-        currentHealth = maxHealth;
-        currentHunger = 0;
-        healPoints = 0;
-        score = 0;
-    }
+        private bool isHungry = false;
 
-    public bool AddHealPoints(float hp)
-    {
-        if (currentHealth >= maxHealth)
-            return false;
+        private UIManager uiManager;
 
-        healPoints += hp;
-        if (healPoints >= 1)
+        #region Properties
+        public int MaxHealth { get => maxHealth; }
+        public int CurrentHealth
         {
-            currentHealth++;
-            healPoints--;
-            return true;
+            get => currentHealth;
+            set
+            {
+                currentHealth = Mathf.Clamp(value, 0, maxHealth);
+
+                uiManager.UpdateHealthUI();
+            }
         }
-        return false;
-    }
+        public int MaxHunger { get => maxHunger; }
+        public int CurrentHunger
+        {
+            get => currentHunger;
+            set
+            {
 
-    public void AddScore(int value)
-    {
-        score += value;
+                currentHunger = Mathf.Clamp(value, 0, maxHunger);
 
-        if (uiManager != null)
-            uiManager.UpdateScoreUI();
-    }
+                if (currentHunger == maxHunger)
+                {
+                    isHungry = true;
+                    StaticEvents.Hungry?.Invoke(isHungry);
+                }
 
-    public void Eat(int value)
-    {
-        currentHunger -= value;
-        StaticEvents.Hungry?.Invoke(false);
-        if (currentHunger < 0)
+                if (isHungry && currentHunger < maxHunger)
+                {
+                    isHungry = false;
+                    StaticEvents.Hungry?.Invoke(isHungry);
+                }
+            }
+        }
+        public int Score { get => score; }
+        public UIManager UiManager { set => uiManager = value; }
+        #endregion
+
+        private void OnEnable()
+        {
+            StaticEvents.StartTheGame += ResetPlayerData;
+        }
+
+        private void OnDisable()
+        {
+            StaticEvents.StartTheGame -= ResetPlayerData;
+            isHungry = false;
+        }
+
+        private void ResetPlayerData(DifficultySettingsData d)
+        {
+            maxHealth = 50;
+            currentHealth = maxHealth;
             currentHunger = 0;
+            healPoints = 0;
+            score = 0;
+            isHungry = false;
+        }
+
+        public bool AddHealPoints(float hp)
+        {
+            healPoints += hp;
+            if (healPoints >= 1)
+            {
+                maxHealth++;
+                CurrentHealth++;
+                healPoints--;
+                return true;
+            }
+            return false;
+        }
+
+        public void AddScore(int value)
+        {
+            score += value;
+
+            if (uiManager != null)
+                uiManager.UpdateScoreUI();
+        }
     }
 }

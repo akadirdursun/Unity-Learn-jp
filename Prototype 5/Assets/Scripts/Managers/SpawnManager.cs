@@ -2,51 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+namespace ClickyMause
 {
-    [SerializeField] private List<GameObject> targets;
-    [SerializeField] private float spawnTime = 1.5f;
-
-    private float xSpawnRange = 4f;
-    private float ySpawnPos = -2f;
-
-    private Coroutine spawnCoroutine;
-
-    private void OnEnable()
+    public class SpawnManager : MonoBehaviour
     {
-        StaticEvents.StartTheGame += StartToSpawn;
-        StaticEvents.GameOver += StopSpawning;
-    }
+        [SerializeField] private List<GameObject> targets;
+        [SerializeField] private int spawnPerSec = 5;
 
-    private void OnDisable()
-    {
-        StaticEvents.StartTheGame -= StartToSpawn;
-        StaticEvents.GameOver -= StopSpawning;
-    }
+        private float xSpawnRange = 4f;
+        private float ySpawnPos = -2f;
 
-    private void StartToSpawn(DifficultySettingsData settings)
-    {
-        spawnTime = settings.SpawnTime;        
-        spawnCoroutine = StartCoroutine(SpawnTarget());
-    }
+        private Coroutine spawnCoroutine;
 
-    IEnumerator SpawnTarget()
-    {
-        while (true)
+        private void OnEnable()
         {
-            yield return new WaitForSeconds(spawnTime);
-            int index = Random.Range(0, targets.Count);
-            Instantiate(targets[index], RandomSpawnPosition(), targets[index].transform.rotation);
+            StaticEvents.StartTheGame += StartToSpawn;
+            StaticEvents.GameOver += StopSpawning;
         }
-    }
 
-    private Vector3 RandomSpawnPosition()
-    {
-        return new Vector3(Random.Range(-xSpawnRange, xSpawnRange), ySpawnPos);
-    }
+        private void OnDisable()
+        {
+            StaticEvents.StartTheGame -= StartToSpawn;
+            StaticEvents.GameOver -= StopSpawning;
+        }
 
-    private void StopSpawning()
-    {                
-        StopCoroutine(spawnCoroutine);
+        private void StartToSpawn(DifficultySettingsData settings)
+        {
+            spawnPerSec = settings.SpawnTime;
+            spawnCoroutine = StartCoroutine(SpawnTarget());
+        }
+
+        IEnumerator SpawnTarget()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1f / spawnPerSec);
+                int index = Random.Range(0, targets.Count);
+                Instantiate(targets[index], RandomSpawnPosition(), targets[index].transform.rotation);
+            }
+        }
+
+        private Vector3 RandomSpawnPosition()
+        {
+            return new Vector3(Random.Range(-xSpawnRange, xSpawnRange), ySpawnPos);
+        }
+
+        private void StopSpawning()
+        {
+            StopCoroutine(spawnCoroutine);
+        }
     }
 }

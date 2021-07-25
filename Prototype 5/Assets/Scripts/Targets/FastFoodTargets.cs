@@ -1,9 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FastFoodTargets : AbstractTarget
+namespace ClickyMause.Targets
 {
-    [SerializeField] private int nutritiveValue;
-    [SerializeField] [Range(0, 0.5f)] private float hungerSpeedBoost;
+    public class FastFoodTargets : AbstractTarget
+    {
+        [SerializeField] private int nutritiveValue;
+        [SerializeField] [Range(0.4f, 0.9f)] private float hungerSpeedBoost;
+
+        protected override void TargetActions()
+        {
+            playerData.CurrentHunger -= nutritiveValue;
+            StaticEvents.HungerBoost?.Invoke(hungerSpeedBoost);
+        }
+    }
 }

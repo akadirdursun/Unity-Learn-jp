@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1093485333434555563}
   - component: {fileID: 1116644416424109865}
   - component: {fileID: 1116644416424109864}
+  - component: {fileID: -6478813039535409983}
   m_Layer: 6
   m_Name: Skull
   m_TagString: BadTarget
@@ -112,3 +113,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.45716506, y: 0.56609756, z: 0.48352632}
   m_Center: {x: 0.0023369312, y: -0.024399614, z: -0.026319373}
+--- !u!114 &-6478813039535409983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114958438054092979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0199cb71b02581e45ae8466cc58b8347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointValue: -3
+  explosionParticle: {fileID: 7535607469619513247, guid: ac10190cf200c4f7e881ca8e41d3d760, type: 3}
+  playerData: {fileID: 11400000, guid: b5fc52cbaa4f12e4ba1ef784099e0a45, type: 2}
+  increaseHunger: 5

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e17ab73e6aebce4ea9cdc89dae51341, type: 3}
   m_Name: Easy
   m_EditorClassIdentifier: 
-  spawnTime: 0.3
-  hungryPerSec: 10
+  spawnPerSec: 3
+  hungryPerSec: 7
   damageTakenPerSec: 3
+  secToLevelUpDifficulty: 25

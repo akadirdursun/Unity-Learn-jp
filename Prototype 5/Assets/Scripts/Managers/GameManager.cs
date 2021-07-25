@@ -4,15 +4,41 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+namespace ClickyMause
 {
-    public void GameOver()
+    public class GameManager : MonoBehaviour
     {
-        StaticEvents.GameOver?.Invoke();
-    }
+        private bool isPaused;
 
-    public void RestartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        public void GameOver()
+        {
+            StaticEvents.GameOver?.Invoke();
+        }
+
+        public void RestartGame()
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        public void PauseResumeGame()
+        {
+            if (isPaused)
+            {
+                Time.timeScale = 1;
+                isPaused = false;
+            }
+            else
+            {
+                Time.timeScale = 0;
+                isPaused = true;
+            }
+            StaticEvents.PauseResumeGame?.Invoke();
+        }
+    
+        public void QuitGame()
+        {
+            Application.Quit();
+        }
     }
 }

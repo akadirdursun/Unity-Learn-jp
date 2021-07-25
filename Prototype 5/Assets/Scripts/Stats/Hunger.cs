@@ -1,48 +1,81 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Hunger : MonoBehaviour
+namespace ClickyMause.Stats
 {
-    [SerializeField] private PlayerData playerData;
-    [Header("UI")]
-    [SerializeField] private Slider hungerSlider;
-    [SerializeField] private TextMeshProUGUI hungerValueText;
-
-    private float hungerDelay;
-    private bool isHungry = false;
-
-    private void OnEnable()
+    public class Hunger : MonoBehaviour
     {
-        StaticEvents.StartTheGame += StartTheHunger;
-    }
+        [SerializeField] private PlayerData playerData;
+        [Header("UI")]
+        [SerializeField] private Slider hungerSlider;
+        [SerializeField] private TextMeshProUGUI hungerValueText;
 
-    private void OnDisable()
-    {
-        StaticEvents.StartTheGame -= StartTheHunger;
-    }
+        private float hungerDelay;
+        private bool isHungry = false;
+        private bool isHungerBoosted = false;
 
-    private void StartTheHunger(DifficultySettingsData settings)
-    {
-        hungerSlider.maxValue = playerData.MaxHunger;
-        hungerDelay = 1f / settings.HungryPerSec;
-        StartCoroutine(IncreaseHunger());
-    }
+        private Coroutine hungerCoroutine;
 
-    IEnumerator IncreaseHunger()
-    {
-        while (!isHungry)
+        private void OnEnable()
         {
-            yield return new WaitForSeconds(hungerDelay);
-            playerData.CurrentHunger++;
-            hungerSlider.value = playerData.CurrentHunger;
-            hungerValueText.text = playerData.CurrentHunger + " / " + playerData.MaxHunger;
-            if (playerData.CurrentHunger == playerData.MaxHunger)
+            StaticEvents.StartTheGame += StartTheHunger;
+            StaticEvents.Hungry += ResumeTheHunger;
+            StaticEvents.HungerBoost += BoostHunger;
+        }
+
+        private void OnDisable()
+        {
+            StaticEvents.StartTheGame -= StartTheHunger;
+            StaticEvents.Hungry -= ResumeTheHunger;
+            StaticEvents.HungerBoost -= BoostHunger;
+        }
+
+        private void StartTheHunger(DifficultySettingsData settings)
+        {
+            hungerSlider.maxValue = playerData.MaxHunger;
+            hungerDelay = 1f / settings.HungryPerSec;
+            StartCoroutine(IncreaseHunger());
+        }
+
+        private void ResumeTheHunger(bool hungry)
+        {
+            isHungry = hungry;
+            if (!isHungry)
+                StartCoroutine(IncreaseHunger());
+        }
+
+        private void BoostHunger(float boostValue)
+        {
+            float normalSpeed = hungerDelay;
+
+            if (isHungerBoosted)
             {
-                StaticEvents.Hungry?.Invoke(true);
-                isHungry = true;
+                StopCoroutine(hungerCoroutine);
+                hungerDelay = normalSpeed;
+            }
+
+            hungerCoroutine = StartCoroutine(SetHungerBoost(boostValue, normalSpeed));
+        }
+
+        IEnumerator SetHungerBoost(float hungerBoost, float normalSpeed)
+        {
+            isHungerBoosted = true;
+            hungerDelay *= hungerBoost;
+            yield return new WaitForSeconds(0.3f);
+            hungerDelay = normalSpeed;
+            isHungerBoosted = false;
+        }
+
+        IEnumerator IncreaseHunger()
+        {
+            while (!isHungry)
+            {
+                yield return new WaitForSeconds(hungerDelay);
+                playerData.CurrentHunger++;
+                hungerSlider.value = playerData.CurrentHunger;
+                hungerValueText.text = playerData.CurrentHunger + " / " + playerData.MaxHunger;
             }
         }
     }

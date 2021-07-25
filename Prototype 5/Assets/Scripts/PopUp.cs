@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopUp : MonoBehaviour
+namespace ClickyMause
 {
-    private void Start()
+    public class PopUp : MonoBehaviour
     {
-        StartCoroutine(DestroyAfterTime());
-    }
-
-    IEnumerator DestroyAfterTime()
-    {
-        while (true)
+        private void Start()
         {
-            yield return new WaitForSeconds(1f);
-            Destroy(gameObject);
+            StartCoroutine(DestroyAfterTime());
+        }
+
+        IEnumerator DestroyAfterTime()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1f);
+                Destroy(gameObject);
+            }
         }
     }
 }

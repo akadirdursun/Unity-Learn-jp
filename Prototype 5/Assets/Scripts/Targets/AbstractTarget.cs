@@ -1,74 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractTarget : MonoBehaviour
+namespace ClickyMause.Targets
 {
-    [SerializeField] protected int pointValue;
-    [SerializeField] protected ParticleSystem explosionParticle;
-    [SerializeField] protected PlayerData playerData;
-
-    protected Rigidbody targetRB;
-
-    protected float minForce = 10f;
-    protected float maxForce = 15f;
-    protected float torqueValue = 10f;
-
-    protected bool isGameActive = true;
-
-    private void Awake()
+    public abstract class AbstractTarget : MonoBehaviour
     {
-        targetRB = GetComponent<Rigidbody>();
-    }
+        [SerializeField] protected int pointValue;
+        [SerializeField] protected ParticleSystem explosionParticle;
+        [SerializeField] protected PlayerData playerData;
 
-    private void Start()
-    {
-        targetRB.AddForce(RandomForce(), ForceMode.Impulse);
-        targetRB.AddTorque(RandomTarque(), RandomTarque(), RandomTarque(), ForceMode.Impulse);
-    }
+        protected Rigidbody targetRB;
 
-    private void OnEnable()
-    {
-        StaticEvents.GameOver += IsGameOver;
-    }
+        protected float minForce = 10f;
+        protected float maxForce = 15f;
+        protected float torqueValue = 10f;
 
-    private void OnDisable()
-    {
-        StaticEvents.GameOver -= IsGameOver;
-    }
+        protected bool isGameActive = true;
 
-    private void IsGameOver()
-    {
-        isGameActive = false;
-    }
-
-    private void OnMouseDown()
-    {
-        if (isGameActive)
+        private void Awake()
         {
-            playerData.AddScore(pointValue);
-            TargetActions();
-            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            targetRB = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            targetRB.AddForce(RandomForce(), ForceMode.Impulse);
+            targetRB.AddTorque(RandomTarque(), RandomTarque(), RandomTarque(), ForceMode.Impulse);
+        }
+
+        private void OnEnable()
+        {
+            StaticEvents.GameOver += IsGameOver;
+        }
+
+        private void OnDisable()
+        {
+            StaticEvents.GameOver -= IsGameOver;
+        }
+
+        private void IsGameOver()
+        {
+            isGameActive = false;
+        }
+
+        private void OnMouseDown()
+        {
+            if (isGameActive)
+            {
+                playerData.AddScore(pointValue);
+                TargetActions();
+                Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+                Destroy(gameObject);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
             Destroy(gameObject);
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Destroy(gameObject);
-    }
+        private Vector3 RandomForce()
+        {
+            return Vector3.up * Random.Range(minForce, maxForce);
+        }
 
-    private Vector3 RandomForce()
-    {
-        return Vector3.up * Random.Range(minForce, maxForce);
-    }
+        private float RandomTarque()
+        {
+            return Random.Range(-torqueValue, torqueValue);
+        }
 
-    private float RandomTarque()
-    {
-        return Random.Range(-torqueValue, torqueValue);
-    }
-
-    protected virtual void TargetActions()
-    {
+        protected virtual void TargetActions()
+        {
+        }
     }
 }

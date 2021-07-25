@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e17ab73e6aebce4ea9cdc89dae51341, type: 3}
   m_Name: Medium
   m_EditorClassIdentifier: 
-  spawnTime: 0.3
-  hungryPerSec: 17
-  damageTakenPerSec: 6
+  spawnPerSec: 4
+  hungryPerSec: 10
+  damageTakenPerSec: 5
+  secToLevelUpDifficulty: 30

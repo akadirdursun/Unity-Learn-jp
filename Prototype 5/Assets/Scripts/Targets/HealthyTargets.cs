@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthyTargets : AbstractTarget
+namespace ClickyMause.Targets
 {
-    [SerializeField] private int hungerDecreaseValue;
-    [SerializeField] [Range(0,1)] private float healPoint;
-    [SerializeField] private GameObject popUpPrefab;
-
-    private bool isHealed = false;
-
-    protected override void TargetActions()
+    public class HealthyTargets : AbstractTarget
     {
-        isHealed = playerData.AddHealPoints(healPoint);
-        playerData.Eat(hungerDecreaseValue);
+        [SerializeField] private int nutritiveValue;
+        [SerializeField] [Range(0, 1)] private float healPoint;
+        [SerializeField] private GameObject popUpPrefab;
 
-        if (isHealed)
-            Instantiate(popUpPrefab, transform.position, Quaternion.identity);
+        private bool isHealed = false;
+
+        protected override void TargetActions()
+        {
+            isHealed = playerData.AddHealPoints(healPoint);
+            playerData.CurrentHunger -= nutritiveValue;
+
+            if (isHealed)
+                Instantiate(popUpPrefab, transform.position, Quaternion.identity);
+        }
     }
 }
