@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointValue: 25
-  explosionParticle: {fileID: 2478549635105912040, guid: ec46c8c4a3cbc429382ee48bd9169b45, type: 3}
   playerData: {fileID: 11400000, guid: b5fc52cbaa4f12e4ba1ef784099e0a45, type: 2}
+  partickleColor: 5
   nutritiveValue: 7
   healPoint: 0.7
   popUpPrefab: {fileID: 6646001333194504719, guid: 16a80cd68a8bf5b43ad3cae0829ca7e0, type: 3}

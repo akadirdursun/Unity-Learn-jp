@@ -5,8 +5,11 @@ namespace ClickyMause.Targets
     public abstract class AbstractTarget : MonoBehaviour
     {
         [SerializeField] protected int pointValue;
-        [SerializeField] protected ParticleSystem explosionParticle;
+        //[SerializeField] protected ParticleSystem explosionParticle;
         [SerializeField] protected PlayerData playerData;
+        [SerializeField] protected ParticleColor partickleColor;
+
+        protected ObjectPool particlePool;
 
         protected Rigidbody targetRB;
 
@@ -15,6 +18,8 @@ namespace ClickyMause.Targets
         protected float torqueValue = 10f;
 
         protected bool isGameActive = true;
+
+        public ObjectPool ParticlePool { get => particlePool; set => particlePool = value; }
 
         private void Awake()
         {
@@ -44,8 +49,11 @@ namespace ClickyMause.Targets
             {
                 playerData.AddScore(pointValue);
                 TargetActions();
-                Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
-                Destroy(gameObject);
+                //Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+                ParticleSystem particle = particlePool.GetParticle(partickleColor);
+                particle.gameObject.transform.position = transform.position;
+                particle.gameObject.SetActive(true);
+                gameObject.SetActive(false);
             }
         }
 

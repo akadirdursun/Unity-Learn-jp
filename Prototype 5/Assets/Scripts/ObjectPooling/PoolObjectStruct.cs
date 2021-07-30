@@ -1,18 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace ClickyMause
+namespace ClickyMause.Targets
 {
     [System.Serializable]
-    public struct PoolObjectStruct
+    public struct PoolObjectStruct<T>
     {
-        [SerializeField] private Queue<GameObject> poolObjects;
-        [SerializeField] private GameObject objectPrefab;
+        [SerializeField] private Queue<T> poolObjects;
+        [SerializeField] private T objectPrefab;
         [SerializeField] private int poolStartingSize;
 
-        public Queue<GameObject> PoolObjects { get => poolObjects; set { poolObjects = value; } }
+        public Queue<T> PoolObjects { get => poolObjects; set { poolObjects = value; } }
 
-        public GameObject ObjectPrefab { get => objectPrefab; }
+        public T ObjectPrefab { get => objectPrefab; }
         public int PoolSize { get => poolStartingSize; }
     }
 }
