@@ -21,15 +21,11 @@ namespace ClickyMause.Targets
             targetRB = GetComponent<Rigidbody>();
         }
 
-        private void Start()
-        {
-            targetRB.AddForce(RandomForce(), ForceMode.Impulse);
-            targetRB.AddTorque(RandomTarque(), RandomTarque(), RandomTarque(), ForceMode.Impulse);
-        }
-
         private void OnEnable()
         {
             StaticEvents.GameOver += IsGameOver;
+            targetRB.AddForce(RandomForce(), ForceMode.Impulse);
+            targetRB.AddTorque(RandomTarque(), RandomTarque(), RandomTarque(), ForceMode.Impulse);
         }
 
         private void OnDisable()
@@ -55,7 +51,9 @@ namespace ClickyMause.Targets
 
         private void OnTriggerEnter(Collider other)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            targetRB.velocity = Vector3.zero;
+            gameObject.SetActive(false);
         }
 
         private Vector3 RandomForce()

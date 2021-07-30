@@ -6,7 +6,8 @@ namespace ClickyMause
 {
     public class SpawnManager : MonoBehaviour
     {
-        [SerializeField] private List<GameObject> targets;
+        [SerializeField] private ObjectPool targetPool;
+        //[SerializeField] private List<GameObject> targets;
         [SerializeField] private int spawnPerSec = 5;
 
         private float xSpawnRange = 4f;
@@ -37,8 +38,9 @@ namespace ClickyMause
             while (true)
             {
                 yield return new WaitForSeconds(1f / spawnPerSec);
-                int index = Random.Range(0, targets.Count);
-                Instantiate(targets[index], RandomSpawnPosition(), targets[index].transform.rotation);
+                var target = targetPool.GetRandomPoolObject();                
+                target.transform.position = RandomSpawnPosition();
+                target.SetActive(true);
             }
         }
 
