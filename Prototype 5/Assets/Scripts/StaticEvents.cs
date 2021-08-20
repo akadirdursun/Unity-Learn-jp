@@ -8,7 +8,7 @@ namespace ClickyMause
     {
         public delegate void VoidDelegate();
         public static VoidDelegate GameOver;
-        public static VoidDelegate LevelUpDifficulty;
+        //public static VoidDelegate LevelUpDifficulty;
         public static VoidDelegate PauseResumeGame;
 
         public static Action<DifficultySettingsData> StartTheGame;
